@@ -109,13 +109,14 @@ def pacman(w, xy, di, color):
     global pacd
     global powerstate
     global starttime
+    global beans
 
     w.create_image(xy[0]*r, xy[1]*r, anchor=NW, image=img[map[xy[1]][xy[0]]])
 
     if pacd == 0 and (map[xy[1]][xy[0]+1] % 2 == 0 or map[xy[1]][xy[0]+1] % 3 == 0):    # Pacman往右
         xy[0] = xy[0] + 1
         di[0] = 0
-    if pacd == 1 and (map[xy[1]+1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):      # Pacman往下
+    if pacd == 1 and (map[xy[1]+1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):    # Pacman往下
         xy[1] = xy[1] + 1
         di[0] = 1
     if pacd == 2 and (map[xy[1]][xy[0]-1] % 2 == 0 or map[xy[1]][xy[0]-1] % 3 == 0):    # Pacman往左
@@ -127,15 +128,16 @@ def pacman(w, xy, di, color):
 
     if map[xy[1]][xy[0]] == 0:
         map[xy[1]][xy[0]] = 2
+        beans -= 1
     elif map[xy[1]][xy[0]] == 3:
         map[xy[1]][xy[0]] = 2
+        beans -= 1
         starttime = time.time()
         powerstate = 1
 
     x = xy[0] * r; y = xy[1] * r;
 
     if di[0] == 0:
-
         if sw == 0:
            w.create_arc(x, y, x+r, y+r, start=30, extent=300, fill=color, width=3)  # 右開嘴
         else:
@@ -178,23 +180,23 @@ def draw(w):
 
             # Pacman碰到Ghost，黃色Game Over
             if xy[0] == xy1[0] and xy[1] == xy1[1]:
-                w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!");
-                break;
+                w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!")
+                break
             elif xy[0] == xy2[0] and xy[1] == xy2[1]:
-                w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!");
-                break;
+                w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!")
+                break
 
             Ghost(w=w, xy=xy1, di1=di1, color="red")
             # Red Ghost碰到Pacman，紅色Game Over
             if xy[0] == xy1[0] and xy[1] == xy1[1]:
-                w.create_text(300, 180, fill="red", font="Times 35 italic bold", text="Game Over!");
-                break;
+                w.create_text(300, 180, fill="red", font="Times 35 italic bold", text="Game Over!")
+                break
 
             Ghost(w=w, xy=xy2, di1=di2, color="blue")
             # Blue Ghost碰到Pacman，藍色Game Over
             if xy[0] == xy2[0] and xy[1] == xy2[1]:
-                w.create_text(300, 180, fill="blue", font="Times 35 italic bold", text="Game Over!");
-                break;
+                w.create_text(300, 180, fill="blue", font="Times 35 italic bold", text="Game Over!")
+                break
             time.sleep(0.3)
 
         elif powerstate == 1:
@@ -208,11 +210,16 @@ def draw(w):
             if round(time.time() - starttime) == 10:
                 powerstate = 0
 
+        if beans == 0:
+            w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="YOU WIN!!!")
+            break
+
 
 # main program
 sw = 0; pacd = 4
 img = []
 powerstate = 0
+beans = 124
 
 root = Tk()
 root.title("Pacman")
