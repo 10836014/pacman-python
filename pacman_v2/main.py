@@ -66,10 +66,10 @@ def Ghost(w, xy, di1, color):
     w.create_image(xy[0]*30, xy[1]*30, anchor=NW, image=img[map[xy[1]][xy[0]]])
     od1 = iv[di1[0]];
 
-    if map[xy[1]][xy[0]+1] % 2 == 0: dl[0] = 1;
-    if map[xy[1]+1][xy[0]] % 2 == 0: dl[1] = 1;
-    if map[xy[1]][xy[0]-1] % 2 == 0: dl[2] = 1;
-    if map[xy[1]-1][xy[0]] % 2 == 0: dl[3] = 1;
+    if map[xy[1]][xy[0]+1] % 2 == 0 or map[xy[1]][xy[0]+1] % 3 == 0: dl[0] = 1;
+    if map[xy[1]+1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0: dl[1] = 1;
+    if map[xy[1]][xy[0]-1] % 2 == 0 or map[xy[1]][xy[0]-1] % 3 == 0: dl[2] = 1;
+    if map[xy[1]-1][xy[0]] % 2 == 0 or map[xy[1]-1][xy[0]] % 3 == 0: dl[3] = 1;
 
     while True:
         count = dl[0]+dl[1]+dl[2]+dl[3];
@@ -112,16 +112,16 @@ def pacman(w, xy, di, color):
 
     w.create_image(xy[0]*r, xy[1]*r, anchor=NW, image=img[map[xy[1]][xy[0]]])
 
-    if pacd == 0 and (map[xy[1]][xy[0] + 1] % 2 == 0 or map[xy[1]][xy[0] + 1] % 3 == 0):    # Pacman往右
+    if pacd == 0 and (map[xy[1]][xy[0]+1] % 2 == 0 or map[xy[1]][xy[0]+1] % 3 == 0):    # Pacman往右
         xy[0] = xy[0] + 1
         di[0] = 0
-    if pacd == 1 and (map[xy[1] + 1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):      # Pacman往下
+    if pacd == 1 and (map[xy[1]+1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):      # Pacman往下
         xy[1] = xy[1] + 1
         di[0] = 1
-    if pacd == 2 and (map[xy[1]][xy[0] - 1] % 2 == 0 or map[xy[1]][xy[0] - 1] % 3 == 0):    # Pacman往左
+    if pacd == 2 and (map[xy[1]][xy[0]-1] % 2 == 0 or map[xy[1]][xy[0]-1] % 3 == 0):    # Pacman往左
         xy[0] = xy[0] - 1
         di[0] = 2
-    if pacd == 3 and (map[xy[1] - 1][xy[0]] % 2 == 0 or map[xy[1] - 1][xy[0]] % 3 == 0):    # Pacman往上
+    if pacd == 3 and (map[xy[1]-1][xy[0]] % 2 == 0 or map[xy[1]-1][xy[0]] % 3 == 0):    # Pacman往上
         xy[1] = xy[1] - 1
         di[0] = 3
 
@@ -180,16 +180,17 @@ def draw(w):
             if xy[0] == xy1[0] and xy[1] == xy1[1]:
                 w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!");
                 break;
+            elif xy[0] == xy2[0] and xy[1] == xy2[1]:
+                w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!");
+                break;
 
             Ghost(w=w, xy=xy1, di1=di1, color="red")
-
             # Red Ghost碰到Pacman，紅色Game Over
             if xy[0] == xy1[0] and xy[1] == xy1[1]:
                 w.create_text(300, 180, fill="red", font="Times 35 italic bold", text="Game Over!");
                 break;
 
             Ghost(w=w, xy=xy2, di1=di2, color="blue")
-
             # Blue Ghost碰到Pacman，藍色Game Over
             if xy[0] == xy2[0] and xy[1] == xy2[1]:
                 w.create_text(300, 180, fill="blue", font="Times 35 italic bold", text="Game Over!");
@@ -198,6 +199,7 @@ def draw(w):
 
         elif powerstate == 1:
             pacman(w=w, xy=xy, di=di, color="yellow")
+
             # Pacman吃了大力丸後，鬼變紫色且撞到不會Game Over
             Ghost(w=w, xy=xy1, di1=di1, color="purple")
             Ghost(w=w, xy=xy2, di1=di2, color="purple")
