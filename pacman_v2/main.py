@@ -171,12 +171,8 @@ def Ghost(w, xy, di1, color,pac):
     print('operations:', runs, 'path length:', len(path))
     print(grid.grid_str(path=path, start=start, end=end))
     
-    
     xy[0]=path[1][0];
     xy[1]=path[1][1];
-    
-    print(path[1][0])
-    print(path[1][1])
     # draw ghost
     x = (path[1][0]) * 30
     y = (path[1][1]) * 30
