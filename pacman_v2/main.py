@@ -42,8 +42,6 @@ def upKey(event):
 
 
 def drawmap(w, img):
-    global matrix
-    matrix = [[-1 if b == 1 else 1 for b in i] for i in map]
     for i in range(4):
         corner = 0
 
@@ -58,6 +56,7 @@ def drawmap(w, img):
                 break
             else:
                 continue
+                
     for my in range(0, 12):
         global beans
         count = map[my].count(0) + map[my].count(3)
@@ -309,8 +308,7 @@ pacd = 4
 img = []
 powerstate = 0
 beans = 0
-
-matrix = []
+matrix = [[-1 if b == 1 else 1 for b in i] for i in map]
 
 root = Tk()
 root.title("Pacman")
