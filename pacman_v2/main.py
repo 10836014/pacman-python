@@ -22,20 +22,24 @@ map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
+
 # 前進方向向右
 def rightKey(event):
     global pacd;
     pacd = 0
+
 
 # 前進方向向下
 def downKey(event):
     global pacd;
     pacd = 1
 
+
 # 前進方向向左
 def leftKey(event):
     global pacd;
     pacd = 2
+
 
 # 前進方向向上
 def upKey(event):
@@ -60,7 +64,7 @@ def drawmap(w, img):
                 break
             else:
                 continue
-      
+
     # 根據地圖上的各個位置，擺入正確的圖片
     # map0 黃點
     # map1 牆壁
@@ -77,11 +81,12 @@ def drawmap(w, img):
 
 def pacman(w, xy, di, color):
     global sw;
-    r = 30               # 小精靈嘴巴開口角度
-    global pacd          # 小精靈的前進方向
-    global powerstate    # 小精靈的狀態(是否吃的大力丸)
-    global starttime     # 存下當時吃到大力丸的時間
-    global beans         # 吃到的點數數量
+    r = 30  # 小精靈嘴巴開口角度
+    global pacd  # 小精靈的前進方向
+    global powerstate  # 小精靈的狀態(是否吃的大力丸)
+    global starttime  # 存下當時吃到大力丸的時間
+    global beans  # 吃到的點數數量
+    global scores  # 計算分數
 
     w.create_image(xy[0] * r, xy[1] * r, anchor=NW, image=img[map[xy[1]][xy[0]]])
 
@@ -102,10 +107,12 @@ def pacman(w, xy, di, color):
     if map[xy[1]][xy[0]] == 0:
         map[xy[1]][xy[0]] = 2
         beans -= 1
+        scores += 1
     # 吃掉大力丸，總點數減1，狀態變成1
     elif map[xy[1]][xy[0]] == 3:
         map[xy[1]][xy[0]] = 2
         beans -= 1
+        scores += 1
         starttime = time.time()  # 吃到大力丸的時間
         powerstate = 1
 
@@ -135,6 +142,7 @@ def pacman(w, xy, di, color):
             w.create_arc(x, y, x + r, y + r, start=90, extent=-359, fill=color, width=3)  # 上合嘴
 
     sw = ~ sw
+
 
 # 鬼追小精靈，用A* Search演算法
 # Ghsot(畫布, 鬼的座標, 鬼要走的方向, 鬼的顏色, PacMan的座標)
@@ -198,7 +206,7 @@ def Ghost1(w, xy, di1, color):
     ex = 0;
     ey = 0;
     iv = [2, 3, 0, 1];
-    dl = [0, 0, 0, 0]; # 可以走的方向，初始都是0
+    dl = [0, 0, 0, 0];  # 可以走的方向，初始都是0
     w.create_image(xy[0] * 30, xy[1] * 30, anchor=NW, image=img[map[xy[1]][xy[0]]])
     od1 = iv[di1[0]];
 
@@ -256,17 +264,17 @@ def Ghost1(w, xy, di1, color):
 def draw(w):
     global powerstate
     global starttime
-
+    global scores
     # Pacman的起始位置
     # 出現在地圖的最左上角
-    xy = [1, 1];            #xy = pacman的所在座標
-    di = [0];               #di = pacman要前進的方向
+    xy = [1, 1];  # xy = pacman的所在座標
+    di = [0];  # di = pacman要前進的方向
     # Ghost red (行,列)
-    xy1 = [1, 10];          #xy1 = 紅鬼的所在座標
-    di1 = [0];              #di1 = 紅鬼要前進的方向
+    xy1 = [1, 10];  # xy1 = 紅鬼的所在座標
+    di1 = [0];  # di1 = 紅鬼要前進的方向
     # Ghost blue (行,列) 
-    xy2 = [15, 10];         #xy2 = 藍鬼的所在座標 
-    di2 = [2];              #di2 = 藍鬼要前進的方向
+    xy2 = [15, 10];  # xy2 = 藍鬼的所在座標
+    di2 = [2];  # di2 = 藍鬼要前進的方向
 
     drawmap(w=w, img=img)
 
@@ -284,7 +292,8 @@ def draw(w):
 
             # 紅鬼和pacman的座標相疊
             if xy[0] == xy1[0] and xy[1] == xy1[1]:
-                w.create_text(300, 180, fill="red", font="Times 35 italic bold", text="Game Over!")
+                w.create_text(300, 180, fill="red", font="Times 35 italic bold",
+                              text="Game Over!\nYour score : %s" % scores)
                 break
             Ghost(w=w, xy=xy1, di1=di1, color="red", pac=xy)
             # Red Ghost碰到Pacman，紅色Game Over
@@ -292,7 +301,8 @@ def draw(w):
 
             # 藍鬼和pacman的座標相疊
             if xy[0] == xy2[0] and xy[1] == xy2[1]:
-                w.create_text(300, 180, fill="blue", font="Times 35 italic bold", text="Game Over!")
+                w.create_text(300, 180, fill="blue", font="Times 35 italic bold",
+                              text="Game Over!\nYour score : %s" % scores)
                 break
             Ghost(w=w, xy=xy2, di1=di2, color="blue", pac=xy)
             # Blue Ghost碰到Pacman，藍色Game Over
@@ -316,16 +326,18 @@ def draw(w):
 
         # 如果場上的點數全部被吃光了，跳出勝利提示訊息
         if beans == 0:
-            w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="YOU WIN!!!")
+            w.create_text(300, 180, fill="yellow", font="Times 35 italic bold",
+                          text="YOU WIN!!!\nYour score : %s" % scores)
             break
 
 
 # main program
-sw = 0; 
+sw = 0;
 pacd = 4
 img = []
 powerstate = 0
 beans = 0
+scores = 0
 matrix = [[-1 if b == 1 else 1 for b in i] for i in map]
 
 root = Tk()
