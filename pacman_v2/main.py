@@ -56,8 +56,10 @@ def drawmap(w, img):
             x = random.randint(0, 11)
             y = random.randint(0, 19)
 
+            # 判斷是否為障礙物 1
             if x == 1 and y == 1:
                 corner = 1
+
             # 把原本的黃點 0，取代成大力丸 3
             if map[x][y] == 0 and corner == 0:
                 map[x][y] = 3
@@ -69,7 +71,7 @@ def drawmap(w, img):
     # map0 黃點
     # map1 牆壁
     # map2 全黑(被吃掉)
-    # map3 黃點(大力丸)
+    # map3 紅點(大力丸)
     for my in range(0, 12):
         global beans
         count = map[my].count(0) + map[my].count(3)
@@ -90,15 +92,19 @@ def pacman(w, xy, di, color):
 
     w.create_image(xy[0] * r, xy[1] * r, anchor=NW, image=img[map[xy[1]][xy[0]]])
 
+    # 如果Pacman右邊是黃點0或紅點3(大力丸)，Pacman往右
     if pacd == 0 and (map[xy[1]][xy[0] + 1] % 2 == 0 or map[xy[1]][xy[0] + 1] % 3 == 0):  # Pacman往右
         xy[0] = xy[0] + 1
         di[0] = 0
+    # 如果Pacman下方是黃點0或紅點3(大力丸)，Pacman往下
     if pacd == 1 and (map[xy[1] + 1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):  # Pacman往下
         xy[1] = xy[1] + 1
         di[0] = 1
+    # 如果Pacman左邊是黃點0或紅點3(大力丸)，Pacman往左
     if pacd == 2 and (map[xy[1]][xy[0] - 1] % 2 == 0 or map[xy[1]][xy[0] - 1] % 3 == 0):  # Pacman往左
         xy[0] = xy[0] - 1
         di[0] = 2
+    # 如果Pacman上方是黃點0或紅點3(大力丸)，Pacman往上
     if pacd == 3 and (map[xy[1] - 1][xy[0]] % 2 == 0 or map[xy[1] - 1][xy[0]] % 3 == 0):  # Pacman往上
         xy[1] = xy[1] - 1
         di[0] = 3
@@ -211,10 +217,14 @@ def Ghost1(w, xy, di1, color):
     od1 = iv[di1[0]];
 
     # 哪邊可以走
-    if map[xy[1]][xy[0] + 1] % 2 == 0 or map[xy[1]][xy[0] + 1] % 3 == 0: dl[0] = 1;  # 鬼可以向右走，dl[0]存成1
-    if map[xy[1] + 1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0: dl[1] = 1;  # 鬼可以向下走，dl[1]存成1
-    if map[xy[1]][xy[0] - 1] % 2 == 0 or map[xy[1]][xy[0] - 1] % 3 == 0: dl[2] = 1;  # 鬼可以向左走，dl[2]存成1
-    if map[xy[1] - 1][xy[0]] % 2 == 0 or map[xy[1] - 1][xy[0]] % 3 == 0: dl[3] = 1;  # 鬼可以向上走，dl[3]存成1
+    # 如果鬼魂右邊是黃點0或紅點3(大力丸)，鬼魂可以往右，dl[0]存成1
+    if map[xy[1]][xy[0] + 1] % 2 == 0 or map[xy[1]][xy[0] + 1] % 3 == 0: dl[0] = 1;
+    # 如果鬼魂下方是黃點0或紅點3(大力丸)，鬼魂可以往下，dl[1]存成1
+    if map[xy[1] + 1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0: dl[1] = 1;
+    # 如果鬼魂左邊是黃點0或紅點3(大力丸)，鬼魂可以往左，dl[2]存成1
+    if map[xy[1]][xy[0] - 1] % 2 == 0 or map[xy[1]][xy[0] - 1] % 3 == 0: dl[2] = 1;
+    # 如果鬼魂上方是黃點0或紅點3(大力丸)，鬼魂可以往上，dl[3]存成1
+    if map[xy[1] - 1][xy[0]] % 2 == 0 or map[xy[1] - 1][xy[0]] % 3 == 0: dl[3] = 1;
 
     while True:
         count = dl[0] + dl[1] + dl[2] + dl[3];
@@ -279,6 +289,7 @@ def draw(w):
     drawmap(w=w, img=img)
 
     while True:
+        # Pacman沒吃大力丸，正常狀態
         if powerstate == 0:
             pacman(w=w, xy=xy, di=di, color="yellow")
             print("pacman:xy=[" + str(xy[0]) + "," + str(xy[1]) + "]")
@@ -311,7 +322,7 @@ def draw(w):
             # 速度(越大越慢)
             time.sleep(0.3)
 
-        # Pacman吃了大力丸後，狀態變成1
+        # Pacman沒吃大力丸，無敵狀態
         elif powerstate == 1:
             pacman(w=w, xy=xy, di=di, color="yellow")
 
@@ -320,7 +331,7 @@ def draw(w):
             Ghost1(w=w, xy=xy2, di1=di2, color="purple")
             time.sleep(0.3)
 
-            # 大力丸的效力只維持10秒
+            # 大力丸的效力維持10秒
             if round(time.time() - starttime) == 10:
                 powerstate = 0
 
