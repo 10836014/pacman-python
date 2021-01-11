@@ -92,20 +92,20 @@ def pacman(w, xy, di, color):
 
     w.create_image(xy[0] * r, xy[1] * r, anchor=NW, image=img[map[xy[1]][xy[0]]])
 
-    # 如果Pacman右邊是黃點0或紅點3(大力丸)，Pacman往右
-    if pacd == 0 and (map[xy[1]][xy[0] + 1] % 2 == 0 or map[xy[1]][xy[0] + 1] % 3 == 0):  # Pacman往右
+    # 前進方向為右時，判斷Pacman右邊是否為黃點0或紅點3(大力丸)，如果是，Pacman往右
+    if pacd == 0 and (map[xy[1]][xy[0] + 1] % 2 == 0 or map[xy[1]][xy[0] + 1] % 3 == 0):
         xy[0] = xy[0] + 1
         di[0] = 0
-    # 如果Pacman下方是黃點0或紅點3(大力丸)，Pacman往下
-    if pacd == 1 and (map[xy[1] + 1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):  # Pacman往下
+    # 前進方向為下時，判斷Pacman下方是黃點0或紅點3(大力丸)，，如果是，Pacman往下
+    if pacd == 1 and (map[xy[1] + 1][xy[0]] % 2 == 0 or map[xy[1] + 1][xy[0]] % 3 == 0):
         xy[1] = xy[1] + 1
         di[0] = 1
-    # 如果Pacman左邊是黃點0或紅點3(大力丸)，Pacman往左
-    if pacd == 2 and (map[xy[1]][xy[0] - 1] % 2 == 0 or map[xy[1]][xy[0] - 1] % 3 == 0):  # Pacman往左
+    # 前進方向為左時，判斷Pacman左邊是否為黃點0或紅點3(大力丸)，如果是，Pacman往左
+    if pacd == 2 and (map[xy[1]][xy[0] - 1] % 2 == 0 or map[xy[1]][xy[0] - 1] % 3 == 0):
         xy[0] = xy[0] - 1
         di[0] = 2
-    # 如果Pacman上方是黃點0或紅點3(大力丸)，Pacman往上
-    if pacd == 3 and (map[xy[1] - 1][xy[0]] % 2 == 0 or map[xy[1] - 1][xy[0]] % 3 == 0):  # Pacman往上
+    # 前進方向為上時，判斷Pacman上方是否為黃點0或紅點3(大力丸)，如果是，Pacman往上
+    if pacd == 3 and (map[xy[1] - 1][xy[0]] % 2 == 0 or map[xy[1] - 1][xy[0]] % 3 == 0):
         xy[1] = xy[1] - 1
         di[0] = 3
 
