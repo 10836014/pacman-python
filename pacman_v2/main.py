@@ -153,9 +153,8 @@ def pacman(w, xy, di, color):
 # 鬼追小精靈，用A* Search演算法
 # Ghsot(畫布, 鬼的座標, 鬼要走的方向, 鬼的顏色, PacMan的座標)
 def Ghost(w, xy, di1, color, pac):
-    global matrix
-    # 使用二維網格
-    grid = Grid(matrix=matrix)
+    global matrix # 使用二維網格
+    grid = Grid(matrix=matrix) 
 
     ex = 0;
     ey = 0;
@@ -168,21 +167,25 @@ def Ghost(w, xy, di1, color, pac):
     print("鬼位置:" + str(xy))
     print(xy[0], xy[1])
 
-    start = grid.node(xy[0], xy[1])
+    start = grid.node(xy[0], xy[1])  # 起始點為鬼的座標
     print(xy[0], xy[1])
-    end = grid.node(pac[0], pac[1])
+    end = grid.node(pac[0], pac[1])  # 終點為PacMan的座標
     print(pac[0], pac[1])
+    # A*搜尋演算法，設定不可對角線走動 
     finder = AStarFinder(diagonal_movement=DiagonalMovement.never)
     path, runs = finder.find_path(start, end, grid)
-    print(path)
-    print(path[1][1])
-    print(path[1][0])
+    print(path)  #印出最短路徑怎麼走
+    # [(1, 10), (1, 9), (1, 8), (1, 7), (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1)]
+    
+    xy[0] = path[1][0]; # 鬼要到的X座標
+    xy[1] = path[1][1]; # 鬼要到的Y座標
 
-    print('operations:', runs, 'path length:', len(path))
-    print(grid.grid_str(path=path, start=start, end=end))
+    # 找到最短路徑所花的次數、距離
+    print('operations:', runs, 'path length:', len(path)) 
+    # 印出最短路進怎麼走
+    print(grid.grid_str(path=path, start=start, end=end)) 
 
-    xy[0] = path[1][0];
-    xy[1] = path[1][1];
+
     # draw ghost
     x = (path[1][0]) * 30
     y = (path[1][1]) * 30
@@ -293,6 +296,8 @@ def draw(w):
         if powerstate == 0:
             pacman(w=w, xy=xy, di=di, color="yellow")
             print("pacman:xy=[" + str(xy[0]) + "," + str(xy[1]) + "]")
+            time.sleep(0.3) # 速度(越大越慢)
+            
             # Pacman碰到Ghost，黃色Game Over
             # if xy[0] == xy1[0] and xy[1] == xy1[1]:
             #     w.create_text(300, 180, fill="yellow", font="Times 35 italic bold", text="Game Over!")
@@ -319,10 +324,7 @@ def draw(w):
             # Blue Ghost碰到Pacman，藍色Game Over
             print("Blue:xy2=[" + str(xy2[0]) + "," + str(xy2[1]) + "]")
 
-            # 速度(越大越慢)
-            time.sleep(0.3)
-
-        # Pacman沒吃大力丸，無敵狀態
+        # Pacman吃大力丸，無敵狀態
         elif powerstate == 1:
             pacman(w=w, xy=xy, di=di, color="yellow")
 
